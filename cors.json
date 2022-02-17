@@ -1,0 +1,7 @@
+[
+  {
+    "origin": ["http://localhost:1234", "http://send.frank-mayer.io"],
+    "method": ["GET"],
+    "maxAgeSeconds": 3600
+  }
+]
