@@ -53,38 +53,32 @@ export class Downloader {
     return this.path.split("/").pop() ?? id() + ".zip";
   }
 
-  public download() {
+  public async download() {
     return new Promise<void>((resolve, reject) => {
-      const resp = download(this.url, this.fileName);
-      if (typeof resp === "boolean") {
-        if (resp) {
-          this.delete();
-          resolve();
-        } else {
-          reject();
-        }
-      } else {
-        if (resp.status <= 299 && resp.status >= 200) {
-          this.delete();
-          resolve();
-        } else {
-          resp.onloadend = () => {
-            this.delete();
-            resolve();
-          };
-
-          resp.onerror = (ev) => {
-            reject(ev);
-          };
-        }
-      }
+      fetch(this.url)
+        .then((resp) => {
+          if (resp.ok) {
+            resp
+              .blob()
+              .then((blob) => {
+                download(blob, this.fileName);
+                this.delete();
+                resolve();
+              })
+              .catch((err) => {
+                reject(err);
+              });
+          }
+        })
+        .catch((err) => {
+          reject(err);
+        });
     });
   }
 
   public delete() {
-    return firebase.delete(this.path).then(() => {
-      location.pathname = "/";
-    });
+    this.downloadButtonEl.remove();
+    return firebase.delete(this.path);
   }
 
   public static try(path: string): Promise<Downloader | null> {

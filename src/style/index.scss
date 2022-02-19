@@ -102,6 +102,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: $padding;
+  padding: $padding math.div($padding, 2);
 
   position: fixed;
   top: 0;
@@ -110,14 +111,12 @@ body {
   overflow-y: auto !important;
   overflow-x: hidden;
   list-style: none;
-  padding: 0 math.div($padding, 2) $padding math.div($padding, 2);
   z-index: 5;
 
   > li {
     flex: 1;
     background-color: $primary;
     padding: $padding math.div($padding, 2);
-    margin: $padding math.div($padding, 2);
     min-width: fit-content;
     max-width: calc(100vw - 2 * $padding);
     border-radius: $padding;
