@@ -13,6 +13,9 @@ export class Uploader {
   private readonly uploadIndicatorEl: HTMLElement;
   private readonly sendButtonEl: HTMLElement;
   private readonly files = new Array<File>();
+  private get fileSizeSum() {
+    return this.files.reduce((sum, file) => sum + file.size, 0);
+  }
 
   constructor() {
     this.uploadListEl = document.createElement("ul");
@@ -46,6 +49,11 @@ export class Uploader {
         if (file.size > 10490000 /* 10MiB*/) {
           alert(`${file.name} is too large (max 10MiB)`);
           continue;
+        }
+
+        if (this.fileSizeSum > 52450000 /* 50MiB*/) {
+          alert("File size sum is too large (max 50MiB)");
+          break;
         }
 
         this.files.push(file);
