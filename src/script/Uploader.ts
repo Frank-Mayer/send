@@ -43,6 +43,11 @@ export class Uploader {
       ev.stopPropagation();
 
       for (const file of this.fileInputEl.files) {
+        if (file.size > 10490000 /* 10MiB*/) {
+          alert(`${file.name} is too large`);
+          continue;
+        }
+
         this.files.push(file);
       }
 
