@@ -44,7 +44,7 @@ export class Uploader {
 
       for (const file of this.fileInputEl.files) {
         if (file.size > 10490000 /* 10MiB*/) {
-          alert(`${file.name} is too large`);
+          alert(`${file.name} is too large (max 10MiB)`);
           continue;
         }
 
