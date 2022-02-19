@@ -106,9 +106,7 @@ export class Uploader {
 
     uploadTask.on("state_changed", (snapshot) => {
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.debug(progress);
       this.uploadIndicatorEl.style.backgroundPositionY = `${progress}%`;
-      console.log(progress);
     });
 
     await uploadTask;
