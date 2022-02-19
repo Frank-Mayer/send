@@ -5,6 +5,7 @@ import md5 from "md5";
 import type { HTMLListElement } from "./HTMLListElement";
 import { displayByteSize } from "./displayByteSize";
 import { copyTextToClipboard } from "./cliploard";
+import { decrypt, encrypt, exportKey } from "./crypt";
 
 export class Uploader {
   private readonly fileInputEl: HTMLInputElement;
@@ -86,9 +87,9 @@ export class Uploader {
     const date = new Date().toISOString().split("T")[0];
     const path = `/${date}/${id()}.zip`;
 
-    const url = location.origin + path;
+    const url = location.origin + path + "#" + (await exportKey());
 
-    const data = new Uint8Array(await zip.arrayBuffer());
+    const data = new Uint8Array(await encrypt(await zip.arrayBuffer()));
 
     const md5Hash = md5(data);
 

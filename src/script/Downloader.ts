@@ -4,6 +4,7 @@ import type { FullMetadata } from "@firebase/storage";
 import type { HTMLListElement } from "./HTMLListElement";
 import { displayByteSize } from "./displayByteSize";
 import { id } from "./idGen";
+import { decrypt, importKey } from "./crypt";
 
 export class Downloader {
   private readonly downloadButtonEl: HTMLElement;
@@ -14,13 +15,22 @@ export class Downloader {
     private readonly url: string,
     meta: FullMetadata
   ) {
+    if (location.hash.length > 4) {
+      importKey(location.hash.substring(1));
+    }
+
     this.downloadButtonEl = document.createElement("div");
     this.downloadButtonEl.id = "download";
     this.downloadButtonEl.className = "floating-button";
     this.downloadButtonEl.title = "Download";
     document.body.appendChild(this.downloadButtonEl);
     this.downloadButtonEl.addEventListener("click", () => {
-      this.download();
+      try {
+        this.download();
+      } catch (err) {
+        alert("Download failed");
+        console.error(err);
+      }
     });
 
     if (meta.customMetadata && "files" in meta.customMetadata) {
@@ -54,26 +64,16 @@ export class Downloader {
   }
 
   public async download() {
-    return new Promise<void>((resolve, reject) => {
-      fetch(this.url)
-        .then((resp) => {
-          if (resp.ok) {
-            resp
-              .blob()
-              .then((blob) => {
-                download(blob, this.fileName);
-                this.delete();
-                resolve();
-              })
-              .catch((err) => {
-                reject(err);
-              });
-          }
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+    const resp = await fetch(this.url);
+    if (resp.status >= 200 && resp.status < 400) {
+      const buffer = await resp.arrayBuffer();
+      const decrypted = await decrypt(buffer);
+      download(decrypted, this.fileName);
+      this.delete();
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public delete() {
@@ -102,6 +102,7 @@ export class Downloader {
         })
         .catch((err) => {
           console.error("Not a download url", err);
+          alert(`File ${path} does not exist`);
           resolve(null);
         });
     });

@@ -15,6 +15,8 @@
     size: 50vmin 50vmin;
     position: center;
   }
+
+  transition: background-position-y 200ms ease-out;
 }
 
 input[type="file"] {
