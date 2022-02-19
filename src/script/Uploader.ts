@@ -4,6 +4,7 @@ import { id } from "./idGen";
 import md5 from "md5";
 import type { HTMLListElement } from "./HTMLListElement";
 import { displayByteSize } from "./displayByteSize";
+import { copyTextToClipboard } from "./cliploard";
 
 export class Uploader {
   private readonly fileInputEl: HTMLInputElement;
@@ -117,9 +118,29 @@ export class Uploader {
 
   private promptCopyUrl(url: string) {
     const el = document.createElement("div");
-    el.innerText = `Upload complete\n\nDownload from here:\n${url}`;
     el.className = "prompt";
+
+    const textEl = document.createElement("span");
+    textEl.innerText = "Upload complete\nDownload from here:";
+    textEl.className = "text";
+    el.appendChild(textEl);
+
+    const urlEl = document.createElement("a");
+    urlEl.href = url;
+    urlEl.innerText = url;
+    el.appendChild(urlEl);
+    urlEl.className = "url";
+
+    const copyEl = document.createElement("span");
+    copyEl.innerText = "Click to copy this URL to clipboard";
+    copyEl.addEventListener("click", () => {
+      copyTextToClipboard(url).then((copied) => {
+        copyEl.innerText = copied ? "Copied!" : "Failed to copy";
+      });
+    });
+    copyEl.className = "copy";
+    el.appendChild(copyEl);
+
     document.body.appendChild(el);
-    navigator.clipboard.writeText(url);
   }
 }
