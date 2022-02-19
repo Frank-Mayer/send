@@ -8,9 +8,6 @@ try {
   downloader.then((downloader) => {
     if (downloader) {
       app.downloader = downloader;
-      downloader.download().then(() => {
-        downloader.delete();
-      });
     } else {
       history.replaceState(null, null, "/");
       app.uploader = new Uploader();

@@ -1,3 +1,4 @@
+@use "sass:math";
 @import "../../node_modules/normalize.css/normalize.css";
 
 * {
@@ -7,12 +8,95 @@
   text-rendering: optimizeLegibility !important;
   image-rendering: optimizeQuality !important;
   shape-rendering: geometricPrecision !important;
+  padding: 0;
+  margin: 0;
 }
 
 @import "theme";
 @import "upload";
+@import "download";
 
 :root,
 body {
   background-color: $background !important;
+  overflow-x: hidden;
+}
+
+.prompt {
+  position: fixed;
+  top: $padding;
+  left: $padding;
+  right: $padding;
+  width: calc(100% - 4 * $padding);
+  padding: $padding !important;
+  border-radius: $padding;
+  background-color: $primary-variant;
+  color: $background;
+  z-index: 102;
+  box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%),
+    0 3px 1px -2px rgb(0 0 0 / 20%);
+}
+
+.floating-button {
+  position: fixed;
+  right: $padding;
+  bottom: $padding;
+  border-radius: 50%;
+  background-color: $primary;
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: 14px;
+  background-size: 50%;
+  z-index: 101;
+  cursor: pointer;
+  width: 64px;
+  height: 64px;
+  box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%),
+    0 3px 1px -2px rgb(0 0 0 / 20%);
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &#send {
+    background-image: url(../img/ios_share.svg);
+  }
+
+  &#download {
+    background-image: url(../img/file_download.svg);
+  }
+}
+
+#upload-list,
+#download-list {
+  background-color: $background;
+  list-style: none;
+  padding: 0 math.div($padding, 2) $padding math.div($padding, 2);
+  z-index: 5;
+
+  > li {
+    background-color: $secondary;
+    padding: $padding math.div($padding, 2);
+    margin: $padding math.div($padding, 2);
+    min-width: fit-content;
+    max-width: calc(100% - 2 * $padding);
+    border-radius: $padding;
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%),
+      0 3px 1px -2px rgb(0 0 0 / 20%);
+
+    .name {
+      font-weight: bold;
+    }
+
+    .size {
+      font-size: 0.6em;
+      &::before {
+        content: "  ";
+      }
+    }
+  }
+}
+
+#upload-list {
+  max-width: calc(50vw - 25vmin + #{2 * $padding});
 }

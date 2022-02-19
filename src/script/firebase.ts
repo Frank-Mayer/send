@@ -3,11 +3,12 @@ import type { FirebaseOptions, FirebaseApp } from "firebase/app";
 import {
   getStorage,
   ref as storage_ref,
-  uploadBytes,
+  uploadBytesResumable,
   getDownloadURL,
   deleteObject,
+  getMetadata,
 } from "firebase/storage";
-import type { FirebaseStorage } from "firebase/storage";
+import type { FirebaseStorage, UploadMetadata } from "firebase/storage";
 
 class Firebase {
   private readonly app: FirebaseApp;
@@ -18,14 +19,23 @@ class Firebase {
     this.storage = getStorage(this.app);
   }
 
-  public upload(url: string, data: Blob | Uint8Array | ArrayBuffer) {
+  public upload(
+    url: string,
+    data: Blob | Uint8Array | ArrayBuffer,
+    metadata: UploadMetadata
+  ) {
     const ref = storage_ref(this.storage, url);
-    return uploadBytes(ref, data);
+    return uploadBytesResumable(ref, data, metadata);
   }
 
   public downloadUrl(url: string) {
     const ref = storage_ref(this.storage, url);
     return getDownloadURL(ref);
+  }
+
+  public getMeta(url: string) {
+    const ref = storage_ref(this.storage, url);
+    return getMetadata(ref);
   }
 
   public delete(url: string) {

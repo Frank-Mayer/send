@@ -1,32 +1,19 @@
-#upload {
-  width: 100vw;
-  height: 100vh;
-  background-image: url(../img/upload.svg);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 50vmin;
-}
+#upload-indicator {
+  position: absolute;
+  top: calc(50vh - 25vmin);
+  left: calc(50vw - 25vmin);
+  width: 50vmin;
+  height: 50vmin;
+  z-index: 1;
 
-#send {
-  position: fixed;
-  right: $padding;
-  bottom: $padding;
-  border-radius: 50%;
-  background-color: $primary;
-  background-image: url(../img/ios_share.svg);
+  background-image: linear-gradient(to top, $primary 50%, $surface 50%);
+  background-size: 100% 200%;
   background-repeat: no-repeat;
-  background-position-x: center;
-  background-position-y: 14px;
-  background-size: 50%;
-  z-index: 101;
-  cursor: pointer;
-  width: 64px;
-  height: 64px;
-  box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%),
-    0 3px 1px -2px rgb(0 0 0 / 20%);
-
-  &:hover {
-    transform: scale(1.1);
+  mask: {
+    image: url(../img/upload.svg);
+    repeat: no-repeat;
+    size: 50vmin 50vmin;
+    position: center;
   }
 }
 
@@ -40,17 +27,4 @@ input[type="file"] {
   z-index: 100;
   opacity: 0;
   cursor: pointer;
-}
-
-.prompt {
-  position: fixed;
-  top: $padding;
-  left: $padding;
-  right: $padding;
-  width: calc(100% - 4 * $padding);
-  padding: $padding;
-  border-radius: $padding;
-  background-color: $primary-variant;
-  color: $background;
-  z-index: 102;
 }
