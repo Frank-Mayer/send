@@ -56,6 +56,11 @@ export class Uploader {
           break;
         }
 
+        if (this.files.length >= 20) {
+          alert(`You can only upload up to 20 files`);
+          break;
+        }
+
         this.files.push(file);
       }
 
