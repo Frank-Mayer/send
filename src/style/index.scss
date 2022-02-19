@@ -10,6 +10,7 @@
   shape-rendering: geometricPrecision !important;
   padding: 0;
   margin: 0;
+  overflow: hidden;
 }
 
 @import "theme";
@@ -19,7 +20,6 @@
 :root,
 body {
   background-color: $background !important;
-  overflow-x: hidden;
 }
 
 .prompt {
@@ -69,34 +69,47 @@ body {
 
 #upload-list,
 #download-list {
-  background-color: $background;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $padding;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: calc(100vw - #{$padding});
+  overflow-y: auto !important;
+  overflow-x: hidden;
   list-style: none;
   padding: 0 math.div($padding, 2) $padding math.div($padding, 2);
   z-index: 5;
 
   > li {
-    background-color: $secondary;
+    background-color: $primary;
     padding: $padding math.div($padding, 2);
     margin: $padding math.div($padding, 2);
     min-width: fit-content;
-    max-width: calc(100% - 2 * $padding);
+    max-width: calc(100vw - 2 * $padding);
     border-radius: $padding;
     box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%),
       0 3px 1px -2px rgb(0 0 0 / 20%);
 
-    .name {
-      font-weight: bold;
-    }
+    span {
+      color: $background;
 
-    .size {
-      font-size: 0.6em;
-      &::before {
-        content: "  ";
+      &.name {
+        font-weight: bold;
+        font-size: 18px;
+
+        &::after {
+          content: " ";
+        }
+      }
+
+      &.size {
+        font-size: 10px;
+        display: inline-block;
+        vertical-align: sub;
       }
     }
   }
-}
-
-#upload-list {
-  max-width: calc(50vw - 25vmin + #{2 * $padding});
 }
