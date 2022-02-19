@@ -50,6 +50,12 @@ export class Uploader {
     document.body.appendChild(this.fileInputEl);
   }
 
+  private dispose() {
+    this.uploadListEl.remove();
+    this.sendButtonEl.remove();
+    this.fileInputEl.remove();
+  }
+
   private onUpload() {
     this.uploadListEl.innerHTML = "";
 
@@ -84,6 +90,8 @@ export class Uploader {
     const data = new Uint8Array(await zip.arrayBuffer());
 
     const md5Hash = md5(data);
+
+    this.dispose();
 
     const uploadTask = firebase.upload(path, data, {
       contentType: "application/zip",
