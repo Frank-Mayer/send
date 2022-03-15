@@ -8,14 +8,14 @@ import { decrypt, importKey } from "./crypt";
 
 export class Downloader {
   private readonly downloadButtonEl: HTMLElement;
-  private readonly downloadListEl: HTMLListElement;
+  private downloadListEl: HTMLListElement;
 
-  private constructor(
-    private readonly path: string,
-    private readonly url: string,
+  protected constructor(
+    protected readonly path: string,
+    protected readonly url: string,
     meta: FullMetadata
   ) {
-    if (location.hash.length > 4) {
+    if (location.hash.length > 4 && location.hash !== "#static") {
       importKey(location.hash.substring(1));
     }
 
@@ -42,21 +42,33 @@ export class Downloader {
       document.body.appendChild(this.downloadListEl);
 
       for (const file of files) {
-        const li = document.createElement("li");
-
-        const name = document.createElement("span");
-        name.innerText = file.name;
-        name.className = "name";
-        li.appendChild(name);
-
-        const size = document.createElement("span");
-        size.innerText = displayByteSize(file.size);
-        size.className = "size";
-        li.appendChild(size);
-
-        this.downloadListEl.appendChild(li);
+        this.addToFileList(file.name, file.size);
       }
+    } else {
+      this.addToFileList(this.fileName, meta.size);
     }
+  }
+
+  protected addToFileList(name: string, size: number) {
+    if (!this.downloadListEl) {
+      this.downloadListEl = document.createElement("ul");
+      this.downloadListEl.id = "download-list";
+      document.body.appendChild(this.downloadListEl);
+    }
+
+    const li = document.createElement("li");
+
+    const nameEl = document.createElement("span");
+    nameEl.innerText = name;
+    nameEl.className = "name";
+    li.appendChild(nameEl);
+
+    const sizeEl = document.createElement("span");
+    sizeEl.innerText = displayByteSize(size);
+    sizeEl.className = "size";
+    li.appendChild(sizeEl);
+
+    this.downloadListEl.appendChild(li);
   }
 
   public get fileName(): string {
@@ -86,25 +98,61 @@ export class Downloader {
       return Promise.resolve(null);
     }
 
-    return new Promise((resolve) => {
-      firebase
-        .downloadUrl(path)
-        .then((url) => {
-          firebase
-            .getMeta(path)
-            .then((meta) => {
-              resolve(new Downloader(path, url, meta));
-            })
-            .catch((err) => {
-              console.error(err);
-              resolve(null);
-            });
-        })
-        .catch((err) => {
-          console.error("Not a download url", err);
-          alert(`File ${path} does not exist`);
-          resolve(null);
-        });
+    if (document.location.hash === "#static") {
+      return new Promise((resolve) => {
+        firebase
+          .downloadUrl(path)
+          .then((url) => {
+            firebase
+              .getMeta(path)
+              .then((meta) => {
+                resolve(new StaticDownloader(path, url, meta));
+              })
+              .catch((err) => {
+                console.error(err);
+                resolve(null);
+              });
+          })
+          .catch((err) => {
+            console.error("Not a download url", err);
+            alert(`File ${path} does not exist`);
+            resolve(null);
+          });
+      });
+    } else if (document.location.hash.length > 4) {
+      return new Promise((resolve) => {
+        firebase
+          .downloadUrl(path)
+          .then((url) => {
+            firebase
+              .getMeta(path)
+              .then((meta) => {
+                resolve(new Downloader(path, url, meta));
+              })
+              .catch((err) => {
+                console.error(err);
+                resolve(null);
+              });
+          })
+          .catch((err) => {
+            console.error("Not a download url", err);
+            alert(`File ${path} does not exist`);
+            resolve(null);
+          });
+      });
+    }
+  }
+}
+
+export class StaticDownloader extends Downloader {
+  public override download(): Promise<boolean> {
+    return new Promise(() => {
+      const a = document.createElement("a");
+      a.href = this.url;
+      a.click();
+      setTimeout(() => {
+        a.remove();
+      }, 1000);
     });
   }
 }

@@ -1,6 +1,9 @@
 # Parcel
 .parcel-cache/
 
+# Firebase
+.firebase/
+
 # TypeScript
 *.js
 *.d.ts
