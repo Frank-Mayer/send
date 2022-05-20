@@ -1221,10 +1221,10 @@ chrome-trace-event@^1.0.2:
   resolved "https://registry.yarnpkg.com/chrome-trace-event/-/chrome-trace-event-1.0.3.tgz#1015eced4741e15d06664a957dbbf50d041e26ac"
   integrity sha512-p3KULyQg4S7NIHixdwbGX+nFHkoBiA4YQmyWtjb8XngSKV124nJmRysgAeujbUVb15vh+RvFUfCPqU7rXk+hZg==
 
-client-zip@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/client-zip/-/client-zip-2.0.0.tgz#c93676c92ddb40c858da83517c27297a53874f8d"
-  integrity sha512-JFd4zdhxk5F01NmNnBq3+iMgJkkh0ku9NsI1wZlUjZ52inPJX92vR5TlSkjxRhmHJBPI7YqanD71wDEiKhdWtw==
+client-zip@^2.0.1:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/client-zip/-/client-zip-2.1.0.tgz#a652f33211300b705ed2cb0d2c933a9199d42eeb"
+  integrity sha512-09Ua+LdIvnwxh5Y0UnmlkHL9Nmx5uUCCmrpnMYG0+yfc9kY9TnmJeLyqX189N45t0CQoGv4tPiScTzWPhviQBQ==
 
 cliui@^7.0.2:
   version "7.0.4"
