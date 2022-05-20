@@ -27,7 +27,7 @@
   "dependencies": {
     "client-zip": "^2.0.0",
     "downloadjs": "^1.4.7",
-    "firebase": "^9.6.6",
+    "firebase": "^9.6.8",
     "md5": "^2.3.0",
     "normalize.css": "^8.0.1"
   }
